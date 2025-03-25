@@ -9,4 +9,5 @@ def scale_point_cloud(pcd,scaleFactor):
    
     if hasattr(pcd, 'colors') and len(pcd.colors) > 0:
         pcd_scaled.colors = o3d.utility.Vector3dVector(np.asarray(pcd.colors))
-    return
+    
+    return pcd_scaled
