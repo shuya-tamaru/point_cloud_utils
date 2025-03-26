@@ -29,7 +29,7 @@ def main():
     floor_point_clouds = segment_floors(pcd_origin)
     # _, all_direction_clouds = segment_walls_and_floors(floor_point_clouds)
 
-    mesh = convert_segmented_point_clouds_to_meshes([pcd])
+    # mesh = convert_segmented_point_clouds_to_meshes([pcd])
 
     return
 
