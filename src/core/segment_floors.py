@@ -8,7 +8,6 @@ from src.utils.show_hist import show_hist
 
 def segment_floors(pcd):
     points = np.asarray(pcd.points)
-    # 点群のZ座標のみを取得
     z_values = points[:, 2] 
 
     # ヒストグラムを作成 bin_edgeはz方向の距離を0.05mで分割した範囲を配列で返す[0.0, 0.05, 0.1, ...]
