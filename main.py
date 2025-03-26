@@ -12,7 +12,7 @@ from src.utils.scale_point_cloud import scale_point_cloud
 
 def main():
     # input_file = "data/fragment.ply"
-    input_file = "data/opt.ply"
+    input_file = "data/point_bi.ply"
     
     pcd = load_point_cloud(input_file)
     voxel_size=0.05
@@ -27,7 +27,7 @@ def main():
     pcd_origin = origin_translate(pcd_scaled)
 
     floor_point_clouds = segment_floors(pcd_origin)
-    # _, all_direction_clouds = segment_walls_and_floors(floor_point_clouds)
+    _, all_direction_clouds = segment_walls_and_floors(floor_point_clouds)
 
     # mesh = convert_segmented_point_clouds_to_meshes([pcd])
 

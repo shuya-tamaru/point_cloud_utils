@@ -25,7 +25,7 @@ def segment_walls_and_floors(floor_point_clouds):
 
     o3d.visualization.draw_geometries(list(all_direction_clouds.values()))
     
-    o3d.visualization.draw_geometries(all_wall_planes)
+    # o3d.visualization.draw_geometries(all_wall_planes)
     
     return all_wall_planes, all_direction_clouds
 
