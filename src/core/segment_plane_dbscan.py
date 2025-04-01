@@ -5,7 +5,7 @@ from src.utils.generate_distinct_color_by_direction import (
     generate_distinct_random_color, generate_unique_color)
 
 
-def segment_plane_dbscan(plane_points, direction, counter,  min_points=300):
+def segment_plane_dbscan(plane_points, counter,  min_points=300):
     pcd = o3d.geometry.PointCloud()
     pcd.points = o3d.utility.Vector3dVector(plane_points)
 
@@ -25,11 +25,11 @@ def segment_plane_dbscan(plane_points, direction, counter,  min_points=300):
         if len(cluster_points) >= min_points:
             cluster_pcd = o3d.geometry.PointCloud()
             cluster_pcd.points = o3d.utility.Vector3dVector(cluster_points)
+            cluster_pcd.estimate_normals(search_param=o3d.geometry.KDTreeSearchParamHybrid(radius=0.1, max_nn=30))
 
             color = generate_unique_color(counter.count)
             cluster_pcd.paint_uniform_color(color)
             segmented_dbscan_planes.append(cluster_pcd)
             counter.next()
-            print(counter.count)
 
     return segmented_dbscan_planes
