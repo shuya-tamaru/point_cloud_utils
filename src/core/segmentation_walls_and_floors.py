@@ -14,7 +14,7 @@ def segment_walls_and_floors(floor_point_clouds):
         direction_clouds = extract_directional_planes(pcd, normals)
         for direction, cloud in direction_clouds.items():
             all_direction_clouds[f"{direction}_floor{i}"] = cloud
-        
+
         wall_directions = ["east_wall", "west_wall", "north_wall", "south_wall"]
         for direction in wall_directions:
             if direction in direction_clouds:
@@ -24,9 +24,9 @@ def segment_walls_and_floors(floor_point_clouds):
                 all_wall_planes.extend(wall_planes)
 
     o3d.visualization.draw_geometries(list(all_direction_clouds.values()))
-    
+
     # o3d.visualization.draw_geometries(all_wall_planes)
-    
+
     return all_wall_planes, all_direction_clouds
 
     
