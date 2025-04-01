@@ -26,9 +26,10 @@ def main():
 
     pcd_origin = origin_translate(pcd_scaled)
 
-    voxel_size = 0.02
+    voxel_size = 0.05
     pcd_down = pcd_origin.voxel_down_sample(voxel_size)
     print(f"downsampled point count: {len(pcd_down.points)}")
+
 
     pcd_filtered, _ = pcd_down.remove_statistical_outlier(nb_neighbors=20, std_ratio=1.0)
     print(f"filtered point count: {len(pcd_filtered.points)}")
@@ -39,7 +40,6 @@ def main():
     #     floor_point_clouds)
     # export_point_clouds_to_ply(planes)
     export_point_clouds_to_ply_individual(planes)
-    o3d.visualization.draw_geometries(planes[:20])
     o3d.visualization.draw_geometries(planes)
     return
 

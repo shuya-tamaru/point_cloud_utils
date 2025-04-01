@@ -3,3 +3,6 @@
 point_cloud
 results
 data
+__pycache__/
+*.py[cod]
+*$py.class
