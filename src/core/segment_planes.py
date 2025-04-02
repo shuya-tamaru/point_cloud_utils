@@ -30,7 +30,7 @@ def extract_planes(cloud, direction, counter):
     remaining_points = cloud
 
     min_points = 100
-    distance_threshold = 0.01
+    distance_threshold = 0.02
 
     iteration = 0
     max_iterations = 30

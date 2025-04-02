@@ -18,18 +18,18 @@ from src.utils.scale_point_cloud import scale_point_cloud
 
 def main():
     # input_file = "data/fragment.ply"
-    input_file = "data/opt.ply"
+    input_file = "data/sample2.ply"
+    # coordinate_frame = o3d.geometry.TriangleMesh.create_coordinate_frame(size=10.0, origin=[0, 0, 0])
 
     pcd = load_point_cloud(input_file)
 
-    pcd_scaled = scale_point_cloud(pcd, 0.001)
+    pcd_scaled = scale_point_cloud(pcd, 1)
 
     pcd_origin = origin_translate(pcd_scaled)
 
-    voxel_size = 0.05
+    voxel_size = 0.04
     pcd_down = pcd_origin.voxel_down_sample(voxel_size)
     print(f"downsampled point count: {len(pcd_down.points)}")
-
 
     pcd_filtered, _ = pcd_down.remove_statistical_outlier(nb_neighbors=20, std_ratio=1.0)
     print(f"filtered point count: {len(pcd_filtered.points)}")
@@ -40,7 +40,10 @@ def main():
     #     floor_point_clouds)
     # export_point_clouds_to_ply(planes)
     export_point_clouds_to_ply_individual(planes)
-    o3d.visualization.draw_geometries(planes)
+    pcd_down.translate([10, 0, 0])
+    pcd_down_and_planes = [pcd_down] + planes
+
+    o3d.visualization.draw_geometries(pcd_down_and_planes)
     return
 
     # mesh = convert_segmented_point_clouds_to_meshes(planes)

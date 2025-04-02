@@ -5,7 +5,7 @@ from src.utils.generate_distinct_color_by_direction import (
     generate_distinct_random_color, generate_unique_color)
 
 
-def segment_plane_dbscan(plane_points, counter,  min_points=300):
+def segment_plane_dbscan(plane_points, counter,  min_points=100):
     pcd = o3d.geometry.PointCloud()
     pcd.points = o3d.utility.Vector3dVector(plane_points)
 
