@@ -1,16 +1,12 @@
 import numpy as np
 import open3d as o3d
 
-from src.utils.generate_distinct_color_by_direction import (
-    generate_distinct_random_color, generate_unique_color)
-
-
-def segment_plane_dbscan(plane_points, counter,  min_points=100):
+def segment_plane_dbscan(plane_points, min_points=100):
     pcd = o3d.geometry.PointCloud()
     pcd.points = o3d.utility.Vector3dVector(plane_points)
 
     labels = np.array(
-        pcd.cluster_dbscan(eps=1.0, min_points=100)
+        pcd.cluster_dbscan(eps=0.4, min_points=100)
     )
 
     max_label = labels.max()
@@ -27,9 +23,6 @@ def segment_plane_dbscan(plane_points, counter,  min_points=100):
             cluster_pcd.points = o3d.utility.Vector3dVector(cluster_points)
             cluster_pcd.estimate_normals(search_param=o3d.geometry.KDTreeSearchParamHybrid(radius=0.1, max_nn=30))
 
-            color = generate_unique_color(counter.count)
-            cluster_pcd.paint_uniform_color(color)
             segmented_dbscan_planes.append(cluster_pcd)
-            counter.next()
 
     return segmented_dbscan_planes

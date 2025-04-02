@@ -14,6 +14,8 @@ from src.utils.export_point_clouds_to_ply_individual import \
     export_point_clouds_to_ply_individual
 from src.utils.origin_translate import origin_translate
 from src.utils.scale_point_cloud import scale_point_cloud
+from src.core.merge_similar_planes import merge_similar_planes
+from src.core.assign_unique_color import assign_unique_color
 
 
 def main():
@@ -27,7 +29,7 @@ def main():
 
     pcd_origin = origin_translate(pcd_scaled)
 
-    voxel_size = 0.04
+    voxel_size = 0.02
     pcd_down = pcd_origin.voxel_down_sample(voxel_size)
     print(f"downsampled point count: {len(pcd_down.points)}")
 
@@ -39,11 +41,14 @@ def main():
     # all_wall_planes, all_direction_clouds = segment_walls_and_floors(
     #     floor_point_clouds)
     # export_point_clouds_to_ply(planes)
-    export_point_clouds_to_ply_individual(planes)
-    pcd_down.translate([10, 0, 0])
-    pcd_down_and_planes = [pcd_down] + planes
-
-    o3d.visualization.draw_geometries(pcd_down_and_planes)
+    merge_planes = merge_similar_planes(planes)
+    all_planes = assign_unique_color(merge_planes)
+    # pcd_down.translate([10, 0, 0])
+    # pcd_down_and_planes = [pcd_down] + all_planes
+    # o3d.visualization.draw_geometries(pcd_down_and_planes)
+    # return 
+    export_point_clouds_to_ply_individual(all_planes)
+    o3d.visualization.draw_geometries(all_planes)
     return
 
     # mesh = convert_segmented_point_clouds_to_meshes(planes)

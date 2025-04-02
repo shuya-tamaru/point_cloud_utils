@@ -15,17 +15,16 @@ def segment_planes(pcd):
     all_planes = []
     pcd_with_normal, normals = get_normals(pcd)
     direction_clouds = extract_directional_planes_xyz(pcd_with_normal, normals)
-    counter = Counter()
     # planes = extract_planes_all(pcd_with_normal, counter)
     # all_planes.extend(planes)
     for direction, cloud in direction_clouds.items():
-        planes = extract_planes(cloud, direction, counter)
+        planes = extract_planes(cloud, direction)
         all_planes.extend(planes)
     print(f"Number of planes: {len(all_planes)}")
     return all_planes
 
 
-def extract_planes(cloud, direction, counter):
+def extract_planes(cloud, direction):
     planes = []
     remaining_points = cloud
 
@@ -42,10 +41,6 @@ def extract_planes(cloud, direction, counter):
             distance_threshold=distance_threshold,
             direction=direction
         )
-        plane_pcd, plane_points, plane_points_count, rmse, inliers = segment_plane_ransac_all_points(
-            remaining_points,
-            distance_threshold=distance_threshold
-        )
 
         # color = generate_unique_color(counter.count)
         # plane_pcd.paint_uniform_color(color)
@@ -53,7 +48,7 @@ def extract_planes(cloud, direction, counter):
         # counter.next()
         if (plane_points_count >= min_points and is_valid_direction and rmse <= 0.05):
             segmented_dbscan_planes = segment_plane_dbscan(
-                plane_points,  counter,  min_points=min_points)
+                plane_points,   min_points=min_points)
             planes.extend(segmented_dbscan_planes)
 
         remaining_points = remaining_points.select_by_index(inliers, invert=True)
