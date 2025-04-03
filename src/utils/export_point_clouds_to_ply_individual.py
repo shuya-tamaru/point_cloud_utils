@@ -7,26 +7,31 @@ def export_point_clouds_to_ply_individual(point_clouds: list, output_dir='./resu
     os.makedirs(output_dir, exist_ok=True)
 
     for i, pcd in enumerate(point_clouds):
-        individual_output_path = os.path.join(output_dir, f'point_cloud_{i}.ply')
+        individual_output_path = os.path.join(
+            output_dir, f'point_cloud_{i}.ply')
         print(f"Full output path: {individual_output_path}")
         o3d.io.write_point_cloud(individual_output_path, pcd)
         print(f"Point cloud {i} exported to: {individual_output_path}")
 
+
 def export_point_clouds_by_point_count(point_clouds: list, output_dir='./results/point_clouds_by_count'):
 
-    small_threshold = 500
+    small_threshold = 1000
     medium_threshold = 2000
-    
+
     os.makedirs(output_dir, exist_ok=True)
-    
-    small_dir = os.path.join(output_dir, f'small_clouds_below_{small_threshold}')
-    medium_dir = os.path.join(output_dir, f'medium_clouds_{small_threshold + 1}_to_{medium_threshold}')
-    large_dir = os.path.join(output_dir, f'large_clouds_above_{medium_threshold}')
-    
+
+    small_dir = os.path.join(
+        output_dir, f'small_clouds_below_{small_threshold}')
+    medium_dir = os.path.join(
+        output_dir, f'medium_clouds_{small_threshold + 1}_to_{medium_threshold}')
+    large_dir = os.path.join(
+        output_dir, f'large_clouds_above_{medium_threshold}')
+
     os.makedirs(small_dir, exist_ok=True)
     os.makedirs(medium_dir, exist_ok=True)
     os.makedirs(large_dir, exist_ok=True)
-    
+
     small_count = 0
     medium_count = 0
     large_count = 0
@@ -37,7 +42,7 @@ def export_point_clouds_by_point_count(point_clouds: list, output_dir='./results
 
     for i, pcd in enumerate(point_clouds):
         num_points = len(pcd.points)
-        
+
         if num_points <= small_threshold:
             target_dir = small_dir
             file_prefix = f'small_{small_count}'
@@ -53,12 +58,14 @@ def export_point_clouds_by_point_count(point_clouds: list, output_dir='./results
             file_prefix = f'large_{large_count}'
             large_planes.append(pcd)
             large_count += 1
-        
+
         # ファイル名の作成と保存
-        output_path = os.path.join(target_dir, f'{file_prefix}_points_{num_points}.ply')
+        output_path = os.path.join(
+            target_dir, f'{file_prefix}_points_{num_points}.ply')
         o3d.io.write_point_cloud(output_path, pcd)
-        print(f"Point cloud with {num_points} points exported to: {output_path}")
-    
+        print(
+            f"Point cloud with {num_points} points exported to: {output_path}")
+
     # 結果の要約を表示
     print(f"\nExport summary:")
     print(f"- Small point clouds (≤ 300 points): {small_count}")
