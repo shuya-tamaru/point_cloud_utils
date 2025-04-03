@@ -13,10 +13,10 @@ from src.utils.calculate_pcd_size import calculate_pcd_size
 
 
 def main():
-    input_file = "data/sample2.ply"
+    input_file = "data/point_bi.ply"
 
     pcd = load_point_cloud(input_file)
-    pcd_scaled = scale_point_cloud(pcd, 1)
+    pcd_scaled = scale_point_cloud(pcd, 0.001)
     pcd_origin = origin_translate(pcd_scaled)
 
     voxel_size = 0.03
@@ -25,6 +25,7 @@ def main():
 
     pcd_filtered, _ = pcd_down.remove_statistical_outlier(
         nb_neighbors=20, std_ratio=1.0)
+
     print(f"filtered point count: {len(pcd_filtered.points)}")
     planes = segment_planes(pcd_filtered)
 

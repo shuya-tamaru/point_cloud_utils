@@ -1,10 +1,10 @@
 import numpy as np
+import open3d as o3d
 
 from src.core.extract_directional_planes import extract_directional_planes_xyz
 from src.core.segment_plane_dbscan import segment_plane_dbscan
 from src.core.segment_plane_ransac import segment_plane_ransac
 from src.utils.get_normals import get_normals
-from src.utils.global_counter import Counter
 
 
 def segment_planes(pcd):
@@ -23,6 +23,7 @@ def extract_planes(cloud, direction):
     min_points = 500
     distance_threshold = 0.02
     dbscan_eps = 0.4
+    dbscan_min_points = 10
     # settings
 
     planes = []
@@ -41,7 +42,7 @@ def extract_planes(cloud, direction):
 
         if (plane_points_count >= min_points and is_valid_direction and rmse <= 0.05):
             segmented_dbscan_planes = segment_plane_dbscan(
-                plane_points, eps=dbscan_eps, min_points=min_points)
+                plane_points, eps=dbscan_eps, min_points=dbscan_min_points)
             planes.extend(segmented_dbscan_planes)
 
         remaining_points = remaining_points.select_by_index(

@@ -23,7 +23,7 @@ def segment_plane_dbscan(plane_points, eps, min_points=100):
             cluster_pcd = o3d.geometry.PointCloud()
             cluster_pcd.points = o3d.utility.Vector3dVector(cluster_points)
             cluster_pcd.estimate_normals(
-                search_param=o3d.geometry.KDTreeSearchParamHybrid(radius=0.1, max_nn=30))
+                search_param=o3d.geometry.KDTreeSearchParamHybrid(radius=0.05, max_nn=50))
 
             segmented_dbscan_planes.append(cluster_pcd)
 
