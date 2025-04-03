@@ -6,7 +6,7 @@ def segment_plane_dbscan(plane_points, min_points=100):
     pcd.points = o3d.utility.Vector3dVector(plane_points)
 
     labels = np.array(
-        pcd.cluster_dbscan(eps=0.4, min_points=100)
+        pcd.cluster_dbscan(eps=0.4, min_points=10)
     )
 
     max_label = labels.max()
