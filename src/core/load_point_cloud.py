@@ -11,6 +11,6 @@ def load_point_cloud(input_file: str):
         return
 
     pcd = o3d.io.read_point_cloud(input_file)
-    print(f"point count: {len(pcd.points)}")
+    print(f"raw data point count: {len(pcd.points)}")
 
     return pcd
