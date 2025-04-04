@@ -1,6 +1,8 @@
 import numpy as np
 import open3d as o3d
 
+from .calculate_normal import calculate_normal
+
 
 def merge_similar_planes(planes, normal_threshold=0.95, distance_threshold=0.05):
     # 結合処理を実装
@@ -73,10 +75,7 @@ def merge_similar_planes(planes, normal_threshold=0.95, distance_threshold=0.05)
         # 結合した点から新しい平面を作成
         new_plane = o3d.geometry.PointCloud()
         new_plane.points = o3d.utility.Vector3dVector(merged_points)
-        new_plane.estimate_normals(
-            search_param=o3d.geometry.KDTreeSearchParamHybrid(radius=0.05, max_nn=50))
-        new_plane.orient_normals_consistent_tangent_plane(100)
-        new_plane.normalize_normals()
+        new_plane = calculate_normal(new_plane, orient_normals_factor=100)
 
         merged_planes.append(new_plane)
 
