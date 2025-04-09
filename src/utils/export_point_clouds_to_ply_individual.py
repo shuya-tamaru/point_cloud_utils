@@ -17,7 +17,7 @@ def export_point_clouds_to_ply_individual(point_clouds: list, output_dir='./resu
 def export_point_clouds_by_point_count(point_clouds: list, output_dir='./results/point_clouds_by_count'):
 
     small_threshold = 500
-    medium_threshold = 3000
+    medium_threshold = 2000
 
     os.makedirs(output_dir, exist_ok=True)
 

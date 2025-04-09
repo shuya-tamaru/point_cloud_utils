@@ -9,7 +9,7 @@ from .load_point_cloud import load_point_cloud
 def setup_pcd(input_file_path: str):
     pcd = load_point_cloud(input_file_path)
 
-    scale_factor = 1.0
+    scale_factor = 0.001
     pcd_scaled = scale_point_cloud(pcd, scale_factor)
 
     pcd_origin = origin_translate(pcd_scaled)
@@ -23,7 +23,7 @@ def setup_pcd(input_file_path: str):
     # outliners = pcd_origin.select_by_index(inliners, invert=True)
     # outliners.paint_uniform_color([1, 0, 0])  # red
 
-    voxel_size = 0.03
+    voxel_size = 0.05
     pcd_down = pcd_filtered.voxel_down_sample(voxel_size)
     print(f"downsampled point count: {len(pcd_down.points)}")
 

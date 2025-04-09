@@ -9,11 +9,17 @@ from src.core.assign_unique_color import assign_unique_color
 from src.core.setup_pcd import setup_pcd
 from src.core.cleanup_planes import cleanup_planes
 from src.core.split_pcd import split_pcd
+from src.utils.export_ply import export_ply
 
 
 def main():
-    input_file_path = "data/sample2.ply"
+    input_file_path = "data/test.ply"
     pcd_optimize = setup_pcd(input_file_path)
+
+    o3d.visualization.draw_geometries([pcd_optimize])
+    export_ply(pcd_optimize)
+    return
+    # return
 
     planes = segment_planes(pcd_optimize)
 
