@@ -17,9 +17,7 @@ def main():
     pcd_optimize = setup_pcd(input_file_path)
 
     o3d.visualization.draw_geometries([pcd_optimize])
-    export_ply(pcd_optimize)
-    return
-    # return
+    # export_ply(pcd_optimize)
 
     planes = segment_planes(pcd_optimize)
 
@@ -39,16 +37,6 @@ def main():
     o3d.visualization.draw_geometries(vis_plane3)
 
     return
-
-# def main():
-#     input_file_path = "data/wall3.ply"
-#     pcd_optimize = setup_pcd(input_file_path)
-#     segments = split_pcd([pcd_optimize])
-#     color_planes = assign_unique_color(segments)
-#     pcd_optimize.translate((0, 5, 0))
-#     all = color_planes + [pcd_optimize]
-#     o3d.visualization.draw_geometries(all)
-    # return
 
 
 if __name__ == "__main__":
