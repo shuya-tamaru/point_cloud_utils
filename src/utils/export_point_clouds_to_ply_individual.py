@@ -17,7 +17,7 @@ def export_point_clouds_to_ply_individual(point_clouds: list, output_dir='./resu
 def export_point_clouds_by_point_count(point_clouds: list, output_dir='./results/point_clouds_by_count'):
 
     small_threshold = 500
-    medium_threshold = 2000
+    medium_threshold = 1000
 
     os.makedirs(output_dir, exist_ok=True)
 
@@ -68,9 +68,10 @@ def export_point_clouds_by_point_count(point_clouds: list, output_dir='./results
 
     # 結果の要約を表示
     print(f"\nExport summary:")
-    print(f"- Small point clouds (≤ 300 points): {small_count}")
-    print(f"- Medium point clouds (301-2000 points): {medium_count}")
-    print(f"- Large point clouds (> 2000 points): {large_count}")
+    print(f"- Small point clouds (≤ {small_threshold} points): {small_count}")
+    print(
+        f"- Medium point clouds ({small_threshold + 1}-{medium_threshold} points): {medium_count}")
+    print(f"- Large point clouds (> {medium_threshold} points): {large_count}")
     print(f"- Total: {small_count + medium_count + large_count}")
 
     return small_planes, medium_planes, large_planes

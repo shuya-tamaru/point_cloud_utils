@@ -13,7 +13,7 @@ from src.utils.export_ply import export_ply
 
 
 def main():
-    input_file_path = "data/test.ply"
+    input_file_path = "data/1F_interior.ply"
     pcd_optimize = setup_pcd(input_file_path)
 
     o3d.visualization.draw_geometries([pcd_optimize])

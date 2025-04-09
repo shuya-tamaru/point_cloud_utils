@@ -9,7 +9,7 @@ from .load_point_cloud import load_point_cloud
 def setup_pcd(input_file_path: str):
     pcd = load_point_cloud(input_file_path)
 
-    scale_factor = 0.001
+    scale_factor = 1
     pcd_scaled = scale_point_cloud(pcd, scale_factor)
 
     pcd_origin = origin_translate(pcd_scaled)
