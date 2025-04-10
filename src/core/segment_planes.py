@@ -20,10 +20,15 @@ def segment_planes(pcd):
 
 def extract_planes(cloud, direction):
     # settings
-    min_points = 500
+    min_points = 100
     distance_threshold = 0.02
     dbscan_eps = 0.4
     dbscan_min_points = 10
+    # マンションはこれぐらいでとりあえずやるといいかも
+    # min_points = 500
+    # distance_threshold = 0.02
+    # dbscan_eps = 0.4
+    # dbscan_min_points = 10
     # settings
 
     planes = []

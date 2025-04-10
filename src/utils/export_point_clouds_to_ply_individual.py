@@ -19,7 +19,12 @@ def export_point_clouds_by_point_count(point_clouds: list, output_dir='./results
     small_threshold = 500
     medium_threshold = 1000
 
-    os.makedirs(output_dir, exist_ok=True)
+    base_dir = output_dir
+    dir_index = 1
+
+    while os.path.exists(output_dir):
+        output_dir = f"{base_dir}_{dir_index}"
+        dir_index += 1
 
     small_dir = os.path.join(
         output_dir, f'small_clouds_below_{small_threshold}')

@@ -1,4 +1,5 @@
 import numpy as np
+import open3d as o3d
 
 
 def segment_plane_ransac(remaining_points, distance_threshold, direction):
