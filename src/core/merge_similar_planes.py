@@ -4,7 +4,7 @@ import open3d as o3d
 from .calculate_normal import calculate_normal
 
 
-def merge_similar_planes(planes, normal_threshold=0.95, distance_threshold=0.05):
+def merge_similar_planes(planes, normal_threshold=0.95, distance_threshold=0.05, use_original_color=False):
     # 結合処理を実装
     merged_planes = []
     processed = [False] * len(planes)
@@ -15,6 +15,8 @@ def merge_similar_planes(planes, normal_threshold=0.95, distance_threshold=0.05)
 
         current_plane = planes[i]
         current_points = np.asarray(current_plane.points)
+        current_colors = np.asarray(
+            current_plane.colors) if use_original_color else None
 
         normals = current_plane.normals
         reference_normal = normals[0]
@@ -27,11 +29,16 @@ def merge_similar_planes(planes, normal_threshold=0.95, distance_threshold=0.05)
 
         temp_pcd = o3d.geometry.PointCloud()
         temp_pcd.points = o3d.utility.Vector3dVector(current_points)
+        if use_original_color and current_colors is not None:
+            temp_pcd.colors = o3d.utility.Vector3dVector(current_colors)
+
         plane_model, _ = temp_pcd.segment_plane(
             distance_threshold=0.01, ransac_n=3, num_iterations=100)
         a, b, c, d = plane_model
 
         merged_points = current_points.copy()
+        merged_colors = current_colors.copy(
+        ) if use_original_color and current_colors is not None else None
         processed[i] = True
 
         for j in range(i+1, len(planes)):
@@ -40,6 +47,8 @@ def merge_similar_planes(planes, normal_threshold=0.95, distance_threshold=0.05)
 
             plane_j = planes[j]
             points_j = np.asarray(plane_j.points)
+            colors_j = np.asarray(
+                plane_j.colors) if use_original_color else None
 
             normals_j = np.asarray(plane_j.normals)
             reference_normal_j = normals_j[0]
@@ -70,11 +79,15 @@ def merge_similar_planes(planes, normal_threshold=0.95, distance_threshold=0.05)
 
                 if distance < distance_threshold:
                     merged_points = np.vstack([merged_points, points_j])
+                    if use_original_color and merged_colors is not None and colors_j is not None:
+                        merged_colors = np.vstack([merged_colors, colors_j])
                     processed[j] = True
 
         # 結合した点から新しい平面を作成
         new_plane = o3d.geometry.PointCloud()
         new_plane.points = o3d.utility.Vector3dVector(merged_points)
+        if use_original_color and merged_colors is not None:
+            new_plane.colors = o3d.utility.Vector3dVector(merged_colors)
         new_plane = calculate_normal(new_plane, orient_normals_factor=100)
 
         merged_planes.append(new_plane)

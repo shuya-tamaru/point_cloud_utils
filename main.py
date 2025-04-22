@@ -16,17 +16,24 @@ from src.utils.export_planes_direction import export_planes_direction
 
 def building_segmentation(input_file_path):
     pcd_optimize = setup_pcd(input_file_path)
+    # o3d.visualization.draw_geometries([pcd_optimize])
 
-    o3d.visualization.draw_geometries([pcd_optimize])
     # export_ply(pcd_optimize)
-    planes = segment_planes(pcd_optimize)
+    use_original_color = True
+    planes = segment_planes(pcd_optimize, use_original_color)
 
-    merge_planes = merge_similar_planes(planes)
-    cleaned_up_planes = cleanup_planes(merge_planes)
+    # merge_planes = merge_similar_planes(
+    #     planes=planes, use_original_color=use_original_color)
+
+    cleaned_up_planes = cleanup_planes(planes)
     # split_planes = split_pcd(cleaned_up_planes)
-    color_planes = assign_unique_color(cleaned_up_planes)
+    export_planes = cleaned_up_planes
+
+    if use_original_color == False:
+        export_planes = assign_unique_color(cleaned_up_planes)
+
     small_planes, medium_planes, large_planes = export_point_clouds_by_point_count(
-        color_planes)
+        export_planes)
     pcd_optimize.translate((10, 0, 0))
 
     vis_plane = large_planes + [pcd_optimize]
@@ -49,12 +56,12 @@ def stair_segmentation(input_file_path):
 
 
 def main(mode=None):
-    input_file_path = "data/stair.ply"
+    input_file_path = "data/test.ply"
 
     if mode == "stair":
-        stair_segmentation()
+        stair_segmentation(input_file_path)
     else:
-        building_segmentation()
+        building_segmentation(input_file_path)
 
 
 if __name__ == "__main__":
