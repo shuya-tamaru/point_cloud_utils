@@ -3,7 +3,7 @@ import numpy as np
 import sys
 
 from src.core.segment_planes import segment_planes
-from src.utils.export_point_clouds_to_ply_individual import export_point_clouds_by_point_count
+from src.utils.export_point_clouds_to_ply_individual import export_point_clouds_by_point_count, export_point_clouds_to_ply_individual
 from src.core.merge_similar_planes import merge_similar_planes
 from src.core.assign_unique_color import assign_unique_color
 from src.core.setup_pcd import setup_pcd
@@ -12,6 +12,7 @@ from src.core.split_pcd import split_pcd
 from src.utils.export_ply import export_ply
 from src.core.stair_segment import stair_segment
 from src.utils.export_planes_direction import export_planes_direction
+from src.utils.export_ply_by_color import export_ply_by_color
 
 
 def building_segmentation(input_file_path):
@@ -56,10 +57,16 @@ def stair_segmentation(input_file_path):
 
 
 def main(mode=None):
-    input_file_path = "data/test.ply"
+    # input_file_path = "data/test.ply"
+    input_file_path = "data/y.ply"
 
     if mode == "stair":
         stair_segmentation(input_file_path)
+    elif mode == "separate":
+        output_dir = "./results/point_clouds_individual"
+        segmented_planes = export_ply_by_color(
+            input_file_path)
+        export_point_clouds_to_ply_individual(segmented_planes, output_dir)
     else:
         building_segmentation(input_file_path)
 

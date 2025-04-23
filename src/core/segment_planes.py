@@ -24,7 +24,7 @@ def extract_planes(cloud, direction, use_original_color=False):
     # settings
     min_points = 100
     distance_threshold = 0.02
-    dbscan_eps = 0.4
+    dbscan_eps = 0.12
     dbscan_min_points = 10
     # マンションはこれぐらいでとりあえずやるといいかも
     # min_points = 500

@@ -23,7 +23,7 @@ def setup_pcd(input_file_path: str):
     # outliners = pcd_origin.select_by_index(inliners, invert=True)
     # outliners.paint_uniform_color([1, 0, 0])  # red
 
-    voxel_size = 0.03
+    voxel_size = 0.01
     pcd_down = pcd_filtered.voxel_down_sample(voxel_size)
     print(f"downsampled point count: {len(pcd_down.points)}")
 

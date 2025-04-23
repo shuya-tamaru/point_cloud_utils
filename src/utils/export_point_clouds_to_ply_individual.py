@@ -4,7 +4,15 @@ import open3d as o3d
 
 
 def export_point_clouds_to_ply_individual(point_clouds: list, output_dir='./results/point_clouds_individual'):
+    base_output_dir = output_dir
+
+    counter = 1
+    while os.path.exists(output_dir):
+        output_dir = f"{base_output_dir}_{counter}"
+        counter += 1
+
     os.makedirs(output_dir, exist_ok=True)
+    print(f"Created directory: {output_dir}")
 
     for i, pcd in enumerate(point_clouds):
         individual_output_path = os.path.join(
@@ -12,6 +20,8 @@ def export_point_clouds_to_ply_individual(point_clouds: list, output_dir='./resu
         print(f"Full output path: {individual_output_path}")
         o3d.io.write_point_cloud(individual_output_path, pcd)
         print(f"Point cloud {i} exported to: {individual_output_path}")
+
+    return output_dir
 
 
 def export_point_clouds_by_point_count(point_clouds: list, output_dir='./results/point_clouds_by_count'):
