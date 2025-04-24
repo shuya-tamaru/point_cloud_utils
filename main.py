@@ -11,6 +11,7 @@ from src.core.cleanup_planes import cleanup_planes
 from src.core.split_pcd import split_pcd
 from src.utils.export_ply import export_ply
 from src.core.stair_segment import stair_segment
+from src.core.extract_convex_hull import extract_convex_hull
 from src.utils.export_planes_direction import export_planes_direction
 from src.utils.export_ply_by_color import export_ply_by_color
 
@@ -57,9 +58,7 @@ def stair_segmentation(input_file_path):
 
 
 def main(mode=None):
-    # input_file_path = "data/test.ply"
-    input_file_path = "data/y.ply"
-
+    input_file_path = "data/test.ply"
     if mode == "stair":
         stair_segmentation(input_file_path)
     elif mode == "separate":
