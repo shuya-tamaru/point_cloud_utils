@@ -14,8 +14,9 @@ def export_planes_direction(all_planes: dict[str, list], output_dir='./results/p
         dir_index += 1
 
     for direction, planes in all_planes.items():
-        print(f"Number of {direction} planes: {len(planes)}")
         cleaned_up_planes = cleanup_planes(planes)
+        print(
+            f"Number of {direction} planes: {len(planes)} => cleaned_up_planes: {len(cleaned_up_planes)}")
         color_planes = assign_unique_color(cleaned_up_planes)
         o3d.visualization.draw_geometries(color_planes)
 

@@ -1,9 +1,9 @@
 import os
-
 import open3d as o3d
+from .convert_unit import convert_unit
 
 
-def export_point_clouds_to_ply_individual(point_clouds: list, output_dir='./results/point_clouds_individual'):
+def export_point_clouds_to_ply_individual(point_clouds: list, output_dir='./results/point_clouds_individual', convert_unit_factor=1.0):
     base_output_dir = output_dir
 
     counter = 1
@@ -18,16 +18,20 @@ def export_point_clouds_to_ply_individual(point_clouds: list, output_dir='./resu
         individual_output_path = os.path.join(
             output_dir, f'point_cloud_{i}.ply')
         print(f"Full output path: {individual_output_path}")
+
+        if (convert_unit_factor != 1.0):
+            pcd = convert_unit(pcd, convert_unit_factor)
+
         o3d.io.write_point_cloud(individual_output_path, pcd)
         print(f"Point cloud {i} exported to: {individual_output_path}")
 
     return output_dir
 
 
-def export_point_clouds_by_point_count(point_clouds: list, output_dir='./results/point_clouds_by_count'):
-
-    small_threshold = 500
-    medium_threshold = 1000
+def export_point_clouds_by_point_count(point_clouds: list,
+                                       output_dir='./results/point_clouds_by_count',
+                                       small_threshold=500,
+                                       medium_threshold=1000):
 
     base_dir = output_dir
     dir_index = 1

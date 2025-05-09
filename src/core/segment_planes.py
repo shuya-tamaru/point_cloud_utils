@@ -7,31 +7,32 @@ from src.core.segment_plane_ransac import segment_plane_ransac
 from src.utils.get_normals import get_normals
 
 
-def segment_planes(pcd, use_original_color=False):
+def segment_planes(pcd, use_original_color=False,
+                   min_points=500,
+                   distance_threshold=0.02,
+                   dbscan_eps=0.4,
+                   dbscan_min_points=10):
+
     all_planes = []
     pcd_with_normal, normals = get_normals(pcd)
 
     direction_clouds = extract_directional_planes_xyz(
         pcd_with_normal, normals, use_original_color)
     for direction, cloud in direction_clouds.items():
-        planes = extract_planes(cloud, direction, use_original_color)
+        planes = extract_planes(cloud, direction, use_original_color, min_points,
+                                distance_threshold, dbscan_eps, dbscan_min_points)
         all_planes.extend(planes)
     print(f"Number of planes: {len(all_planes)}")
     return all_planes
 
 
-def extract_planes(cloud, direction, use_original_color=False):
-    # settings
-    min_points = 100
-    distance_threshold = 0.02
-    dbscan_eps = 0.12
-    dbscan_min_points = 10
-    # マンションはこれぐらいでとりあえずやるといいかも
-    # min_points = 500
-    # distance_threshold = 0.02
-    # dbscan_eps = 0.4
-    # dbscan_min_points = 10
-    # settings
+def extract_planes(cloud, direction,
+                   use_original_color=False,
+                   min_points=500,
+                   distance_threshold=0.02,
+                   dbscan_eps=0.4,
+                   dbscan_min_points=10
+                   ):
 
     planes = []
     remaining_points = cloud

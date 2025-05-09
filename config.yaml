@@ -1,0 +1,39 @@
+# all settings
+mode: separate  # building, stair, separate
+input_file_path: data/X_result.ply
+
+# building mode
+b_use_original_color: False
+b_visualize_planes_by_size: true
+b_voxel_size: 0.005
+b_scale_factor: 1.0
+b_translate_center: False
+b_output_dir: results/building
+b_nb_neighbors: 40
+b_std_multiplier: 2.5
+b_min_points: 500
+b_distance_threshold: 0.02
+b_dbscan_eps: 0.4
+b_dbscan_min_points: 10
+b_small_folder_threshold: 500
+b_medium_folder_threshold: 1000
+
+# stair mode
+s_scale_factor: 1.0
+s_voxel_size: 0.01
+s_translate_center: False
+s_dbscan_eps_x: 0.1
+s_dbscan_eps_y: 0.1
+s_dbscan_eps_z: 0.1
+s_dbscan_eps_unclassified: 0.1
+s_dbscan_min_points_x: 10
+s_dbscan_min_points_y: 10
+s_dbscan_min_points_z: 10
+s_dbscan_min_points_unclassified: 10
+s_normal_threshold: 0.8
+s_filtered_min_points: 500
+s_output_dir: results/stair
+
+# separate mode
+se_output_dir: results/separate
+se_convert_unit_factor: 1000.0

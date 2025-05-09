@@ -2,72 +2,61 @@ import numpy as np
 import open3d as o3d
 
 
-def extract_directional_planes_xyz(pcd, normals, use_original_color=False):
+def create_directional_cloud(points, mask, pcd, use_original_color, color, min_points):
+    if np.sum(mask) > min_points:
+        directional_cloud = o3d.geometry.PointCloud()
+        directional_cloud.points = o3d.utility.Vector3dVector(points[mask])
+        if use_original_color:
+            directional_cloud.colors = o3d.utility.Vector3dVector(
+                np.asarray(pcd.colors)[mask])
+        else:
+            directional_cloud.paint_uniform_color(color)
+        return directional_cloud
+    return None
+
+
+def extract_directional_planes_xyz(pcd, normals, use_original_color=False, normal_threshold=0.8, min_points=100):
     points = np.asarray(pcd.points)
     normals_array = np.asarray(normals)
 
     abs_normals = np.abs(normals_array)
-    dominant_threshold = 0.8
 
-    x_positive = (abs_normals[:, 0] > dominant_threshold) & (
+    x_positive = (abs_normals[:, 0] > normal_threshold) & (
         normals_array[:, 0] > 0)
-    x_negative = (abs_normals[:, 0] > dominant_threshold) & (
+    x_negative = (abs_normals[:, 0] > normal_threshold) & (
         normals_array[:, 0] < 0)
-    y_positive = (abs_normals[:, 1] > dominant_threshold) & (
+    y_positive = (abs_normals[:, 1] > normal_threshold) & (
         normals_array[:, 1] > 0)
-    y_negative = (abs_normals[:, 1] > dominant_threshold) & (
+    y_negative = (abs_normals[:, 1] > normal_threshold) & (
         normals_array[:, 1] < 0)
-    z_positive = (abs_normals[:, 2] > dominant_threshold) & (
+    z_positive = (abs_normals[:, 2] > normal_threshold) & (
         normals_array[:, 2] > 0)
-    z_negative = (abs_normals[:, 2] > dominant_threshold) & (
+    z_negative = (abs_normals[:, 2] > normal_threshold) & (
         normals_array[:, 2] < 0)
 
     direction_clouds = {}
 
-    if np.sum(x_positive) > 100 or np.sum(x_negative) > 100:
-        x_wall = o3d.geometry.PointCloud()
-        x_wall.points = o3d.utility.Vector3dVector(
-            points[x_positive | x_negative])
-        if use_original_color:
-            x_wall.colors = o3d.utility.Vector3dVector(
-                np.asarray(pcd.colors)[x_positive | x_negative])
-        else:
-            x_wall.paint_uniform_color([1, 0.4, 0.4])
+    x_wall = create_directional_cloud(
+        points, x_positive | x_negative, pcd, use_original_color, [1, 0.4, 0.4], min_points)
+    if x_wall:
         direction_clouds["x"] = x_wall
 
-    if np.sum(y_positive) > 100 or np.sum(y_negative) > 100:
-        y_wall = o3d.geometry.PointCloud()
-        y_wall.points = o3d.utility.Vector3dVector(
-            points[y_positive | y_negative])
-        if use_original_color:
-            y_wall.colors = o3d.utility.Vector3dVector(
-                np.asarray(pcd.colors)[y_positive | y_negative])
-        else:
-            y_wall.paint_uniform_color([0.4, 1, 0.4])  # 緑
+    y_wall = create_directional_cloud(
+        points, y_positive | y_negative, pcd, use_original_color, [0.4, 1, 0.4], min_points)
+    if y_wall:
         direction_clouds["y"] = y_wall
 
-    if np.sum(z_positive) > 100 or np.sum(z_negative) > 100:
-        z_wall = o3d.geometry.PointCloud()
-        z_wall.points = o3d.utility.Vector3dVector(
-            points[z_positive | z_negative])
-        if use_original_color:
-            z_wall.colors = o3d.utility.Vector3dVector(
-                np.asarray(pcd.colors)[z_positive | z_negative])
-        else:
-            z_wall.paint_uniform_color([0.4, 0.4, 1])  # 青
+    z_wall = create_directional_cloud(
+        points, z_positive | z_negative, pcd, use_original_color, [0.4, 0.4, 1], min_points)
+    if z_wall:
         direction_clouds["z"] = z_wall
 
     all_masks = x_positive | x_negative | y_positive | y_negative | z_positive | z_negative
     unclassified = ~all_masks
 
-    if np.sum(unclassified) > 100:
-        other_points = o3d.geometry.PointCloud()
-        other_points.points = o3d.utility.Vector3dVector(points[unclassified])
-        if use_original_color:
-            other_points.colors = o3d.utility.Vector3dVector(
-                np.asarray(pcd.colors)[unclassified])
-        else:
-            other_points.paint_uniform_color([0.5, 0.5, 0.5])
+    other_points = create_directional_cloud(
+        points, unclassified, pcd, use_original_color, [0.5, 0.5, 0.5], min_points)
+    if other_points:
         direction_clouds["unclassified"] = other_points
 
     for direction, cloud in direction_clouds.items():

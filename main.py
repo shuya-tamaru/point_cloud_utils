@@ -1,75 +1,29 @@
-import open3d as o3d
-import numpy as np
 import sys
+import yaml
 
-from src.core.segment_planes import segment_planes
-from src.utils.export_point_clouds_to_ply_individual import export_point_clouds_by_point_count, export_point_clouds_to_ply_individual
-from src.core.merge_similar_planes import merge_similar_planes
-from src.core.assign_unique_color import assign_unique_color
-from src.core.setup_pcd import setup_pcd
-from src.core.cleanup_planes import cleanup_planes
-from src.core.split_pcd import split_pcd
-from src.utils.export_ply import export_ply
-from src.core.stair_segment import stair_segment
-from src.core.extract_convex_hull import extract_convex_hull
-from src.utils.export_planes_direction import export_planes_direction
-from src.utils.export_ply_by_color import export_ply_by_color
+from src.core.all_segmentation import building_segmentation
+from src.core.stair_segmentation import stair_segmentation
+from src.core.separate_export import separate_export
 
 
-def building_segmentation(input_file_path):
-    pcd_optimize = setup_pcd(input_file_path)
-    # o3d.visualization.draw_geometries([pcd_optimize])
-
-    # export_ply(pcd_optimize)
-    use_original_color = True
-    planes = segment_planes(pcd_optimize, use_original_color)
-
-    # merge_planes = merge_similar_planes(
-    #     planes=planes, use_original_color=use_original_color)
-
-    cleaned_up_planes = cleanup_planes(planes)
-    # split_planes = split_pcd(cleaned_up_planes)
-    export_planes = cleaned_up_planes
-
-    if use_original_color == False:
-        export_planes = assign_unique_color(cleaned_up_planes)
-
-    small_planes, medium_planes, large_planes = export_point_clouds_by_point_count(
-        export_planes)
-    pcd_optimize.translate((10, 0, 0))
-
-    vis_plane = large_planes + [pcd_optimize]
-    vis_plane2 = medium_planes + [pcd_optimize]
-    vis_plane3 = small_planes + [pcd_optimize]
-    o3d.visualization.draw_geometries(vis_plane)
-    o3d.visualization.draw_geometries(vis_plane2)
-    o3d.visualization.draw_geometries(vis_plane3)
-
-    return
+def load_config(path="config.yaml"):
+    with open(path, 'r') as f:
+        return yaml.safe_load(f)
 
 
-def stair_segmentation(input_file_path):
+def main():
+    config_path = sys.argv[1] if len(sys.argv) > 1 else "config.yaml"
+    config = load_config(config_path)
 
-    pcd_optimize = setup_pcd(input_file_path)
+    mode = config.get("mode", "building")
 
-    all_planes = stair_segment(pcd_optimize)
-    export_planes_direction(all_planes)
-    return
-
-
-def main(mode=None):
-    input_file_path = "data/test.ply"
     if mode == "stair":
-        stair_segmentation(input_file_path)
+        stair_segmentation(config)
     elif mode == "separate":
-        output_dir = "./results/point_clouds_individual"
-        segmented_planes = export_ply_by_color(
-            input_file_path)
-        export_point_clouds_to_ply_individual(segmented_planes, output_dir)
+        separate_export(config)
     else:
-        building_segmentation(input_file_path)
+        building_segmentation(config)
 
 
 if __name__ == "__main__":
-    mode = sys.argv[1] if len(sys.argv) > 1 else None
-    main(mode)
+    main()
